@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Calibri;
+            background: #2d2d30;
+        }
+
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+<body>
+    <div class="centered">
+        <form id="reg-form">
+            <div class="g-recaptcha"
+                 data-callback="recaptchaCallback"
+                 data-sitekey="6LdRQeMUAAAAAHcNnmRIUB8R8fYRcfte9y6x-3Ph"></div>
+        </form>
+    </div>
+
+    <script>
+        function recaptchaCallback() {
+            var formData = new FormData(document.getElementById("reg-form"));
+            var recaptcha = formData.get("g-recaptcha-response");
+            window.external.notify(recaptcha);
+        }
+
+        function getCaptcha() {
+            var formData = new FormData(document.getElementById("reg-form"));
+            var recaptcha = formData.get("g-recaptcha-response");
+            return recaptcha;
+        }
+
+
+
+
+
+    </script>
+</body>
+</html>

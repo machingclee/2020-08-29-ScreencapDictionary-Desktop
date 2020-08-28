@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "ScreenCapDictionaryNoteApp.Core": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Key": "Value",
+        "AWSSecretKey": "c/eCn4FyYlJWMBfF5my8wPhzkrt0iAS3pHQyqo6x",
+        "AWSAccessKeyId": "AKIAIMWSLRDFCTZV2PSQ",
+        "SERVICE_HOST": "http://localhost:8080"
+      }
+    }
+  }
+}

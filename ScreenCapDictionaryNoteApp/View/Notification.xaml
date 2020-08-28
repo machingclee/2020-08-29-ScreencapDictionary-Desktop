@@ -1,0 +1,98 @@
+﻿<Window x:Class="ScreenCapDictionaryNoteApp.View.Notification"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ScreenCapDictionaryNoteApp.View"
+        mc:Ignorable="d"
+        Title="Window1" Width="300"
+        >
+
+
+
+    <Window.Resources>
+        <!--instanciations occur here, to access them, use Source={StaticResource [keyname]} in binding. As the instanciation occurs once, that's why they are called static resources. 
+        
+        We need to make sure all functionality point to the correct view model, don't try to instanciate datacontext brute-forcely inside MainWindow.xaml.cs, otherwise we lose autocompletion in XAML file and, the control of datacontext (e.g., child of ListView) will become difficult and require much more work to get problems around.-->
+
+
+
+
+
+
+
+
+        <SolidColorBrush Color="#e5e5e5" x:Key="FontColor"/>
+        <SolidColorBrush Color="#2d2d30" x:Key="DeepColor"/>
+        <SolidColorBrush Color="#252526" x:Key="DeeperColor"/>
+        <SolidColorBrush Color="#232323" x:Key="GridSplitterColor"/>
+
+        <Style TargetType="{x:Type ContextMenu}">
+
+        </Style>
+
+
+        <Style TargetType="DockPanel">
+            <Setter Property="Background" Value="{StaticResource DeepColor}"/>
+        </Style>
+
+        <Style TargetType="GridSplitter">
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#232323"/>
+        </Style>
+
+        <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{StaticResource FontColor}" />
+        </Style>
+
+
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        </Style>
+
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource FontColor}" />
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource FontColor}" />
+        </Style>
+
+
+        <Style TargetType="ListViewItem">
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style TargetType="ListView">
+            <Setter Property="Background" Value="{StaticResource DeeperColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource FontColor}"/>
+
+        </Style>
+
+
+
+
+        <Style TargetType="Grid">
+            <Setter Property="Background" Value="{StaticResource DeepColor}"/>
+        </Style>
+
+    </Window.Resources>
+
+
+
+
+    <Grid Height="150">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalAlignment="Stretch" Margin="15 5 15 0" Grid.Row="0">
+            <TextBlock VerticalAlignment="Stretch" x:Name="MessageTextBlock" TextWrapping="Wrap"/>
+        </ScrollViewer>
+        <Button Content="ok" Width="70" Click="OkButton_Clicked" x:Name="OkButton" Grid.Row="1" Height="20"/>
+    </Grid>
+</Window>
