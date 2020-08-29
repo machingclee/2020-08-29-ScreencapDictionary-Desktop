@@ -76,9 +76,6 @@
 
 
   <ItemGroup>
-    <None Update="environment_variable.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="recaptcha.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
