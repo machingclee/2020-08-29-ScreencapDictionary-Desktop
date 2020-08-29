@@ -38,12 +38,33 @@ namespace ScreenCapDictionaryNoteApp.View
 
 
             webView.NavigateToLocalStreamUri(new Uri("recaptcha.html", UriKind.Relative), new CustomResolver());
+
+            //Webview Events
             webView.ScriptNotify += BindRecaptchaToVM;
 
+            //Close Login settings when sign up post request is done:
+            LoginSettingsVM.CloseLoginSettingForm += LoginSettingsVM_CloseLoginSettingForm;
 
+            //Show sign up fail message box when sign up post request fails and close the login form:
+            LoginSettingsVM.ShowSignupFaileMessageBox += LoginSettingsVM_ShowSignupFaileMessageBox;
 
 
         }
+
+
+
+        private void LoginSettingsVM_CloseLoginSettingForm(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void LoginSettingsVM_ShowSignupFaileMessageBox(object sender, EventArgs e)
+        {
+            MessageBox.Show("Sign up request fails, please try again.", "Fail Message");
+            this.Close();
+        }
+
+
 
 
 
@@ -54,7 +75,7 @@ namespace ScreenCapDictionaryNoteApp.View
 
         private void OkButtonClick(object sender, RoutedEventArgs e)
         {
-            loginSettingVM.updateApplicationSetting();
+            loginSettingVM.UpdateApplicationSetting();
             this.Close();
         }
 

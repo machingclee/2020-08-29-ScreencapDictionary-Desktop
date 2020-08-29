@@ -40,6 +40,8 @@
 
 
 
+
+
         <BitmapImage x:Key="addIcon" UriSource="/Assets/addButton.png"/>
         <BitmapImage x:Key="addNoteIcon" UriSource="/Assets/addNote.png"/>
         <BitmapImage x:Key="addPageIcon" UriSource="/Assets/addPage.png"/>
@@ -60,6 +62,10 @@
         <SolidColorBrush Color="#2d2d30" x:Key="DeepColor"/>
         <SolidColorBrush Color="#252526" x:Key="DeeperColor"/>
         <SolidColorBrush Color="#232323" x:Key="GridSplitterColor"/>
+
+
+
+  
 
         <Style TargetType="{x:Type ContextMenu}">
 
@@ -440,7 +446,6 @@
                             </ListView.ContextMenu>
                             <ListView.InputBindings>
                                 <KeyBinding Key="Return" Command="{Binding Source={StaticResource mainVM}, Path=Commands.EndRenamePageCommand}"/>
-
                             </ListView.InputBindings>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDoubleClick">
@@ -659,6 +664,9 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
+
+
+
                             <ListView.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Update" Command="{Binding Source={StaticResource mainVM}, Path=Commands.StartUpdateVocabCommand}"/>
@@ -668,15 +676,17 @@
 
 
                             <ListView.InputBindings>
-                                <KeyBinding Key="Return" Command="{Binding Source={StaticResource mainVM}, Path=CommandsToggleUpdateVocabCommand}" CommandParameter="{Binding SelectedVocab}"/>
+                                <KeyBinding Key="Return" Command="{Binding Source={StaticResource mainVM}, Path=Commands.ToggleUpdateVocabCommand}" CommandParameter="{Binding SelectedVocab}"/>
                             </ListView.InputBindings>
+
+
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDoubleClick">
-                                    <i:InvokeCommandAction Command="{Binding StartUpdateVocabCommand}" CommandParameter="{Binding SelectedVocab}" />
+                                    <i:InvokeCommandAction Command="{Binding Commands.StartUpdateVocabCommand}" CommandParameter="{Binding SelectedPage}" />
                                 </i:EventTrigger>
-
                             </i:Interaction.Triggers>
+
 
 
                         </ListView>

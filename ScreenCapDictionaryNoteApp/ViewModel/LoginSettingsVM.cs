@@ -136,7 +136,7 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
 
 
 
-        public void updateApplicationSetting()
+        public void UpdateApplicationSetting()
         {
             ApplicationConfig.username = Username;
             ApplicationConfig.password = Password;
@@ -174,7 +174,9 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
         }
 
 
+        public static event EventHandler CloseLoginSettingForm;
 
+        public static event EventHandler ShowSignupFaileMessageBox;
 
         public async void PostRequestToSignup()
         {
@@ -195,18 +197,28 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
                 try
                 {
                     var response = await client.PostAsync(postRequestEndPoint, postRequestContent);
+
+                    if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        throw new Exception();
+                    }
+
+
                     var jwtJsonResponseString = await response.Content.ReadAsStringAsync();
                     var jwtTokenResponse = JsonConvert.DeserializeObject<JwtTokenResponse>(jwtJsonResponseString);
 
 
                     JwtToken = jwtTokenResponse.jwtToken;
 
+                    UpdateApplicationSetting();
+
+                    CloseLoginSettingForm(this, new EventArgs());
                 }
                 catch (Exception err)
                 {
-                    JwtToken = "Signup fails";
-                    JwtToken += postRequestEndPoint;
+                    ShowSignupFaileMessageBox(this, new EventArgs());
                 }
+
             }
         }
 
