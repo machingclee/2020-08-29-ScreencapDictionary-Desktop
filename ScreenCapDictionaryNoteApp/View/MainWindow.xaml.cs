@@ -368,14 +368,13 @@ namespace ScreenCapDictionaryNoteApp.View
             selectedPage.croppedImageFilePath = BitmapHelper.SaveCroppedBitmapReturnPath(screenshotPopup.CroppedImage, selectedPage);
             selectedPage.Version++;
             selectedPage.IsImgNewerVersion = true;
+            selectedPage.IsSyncToS3 = false;
 
             DatabaseHelper.Update(selectedPage);
+
             if (pagesList.Items.Count > 0)
             {
-
                 pagesList.SelectedIndex = MainVM.SelectedPageIndex;
-
-
             }
 
         }

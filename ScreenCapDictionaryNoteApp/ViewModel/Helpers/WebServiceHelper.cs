@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
 {
@@ -17,11 +18,16 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
     {
         private static string postRequestEndPoint = Config.SERVICE_HOST + "/api/screencaps";
 
-        private string token;
-
+        private ApplicationConfig ApplicationConfig;
 
         public static event EventHandler UpdateMessageBoxHandler;
 
+
+
+        public WebServiceHelper(ApplicationConfig applicationConfig)
+        {
+            ApplicationConfig = applicationConfig;
+        }
 
 
         private void OpenMessageBox()
@@ -49,8 +55,7 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
                 List<Page> allPages = DatabaseHelper.Read<Page>();
                 List<Vocab> allVocabs = DatabaseHelper.Read<Vocab>();
 
-
-
+                // just sync pages with cropped image:
                 foreach (var page in allPages.ToList())
                 {
                     if (page.croppedImageFilePath == null)
@@ -72,75 +77,18 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
 
                 });
 
-                var syncInfo = new SyncInfoModel()
-                {
-                    Notes = allNotes,
-                    Pages = allPages,
-                    Vocabs = allVocabs
-                };
+                await SyncSqliteDbVocabsToWebDb(allNotes, allPages, allVocabs);
 
+                UpdateMessageBox("All vocabs uploaded");
 
-                //UpdateMessageBox("Sending Images to S3 Bucket ...");
-                //uploadedImageCount = 0;
-                //foreach (Page page in allPages)
-                //{
+                UpdateMessageBox("Sending images to S3 bucket ...");
 
-                //    if (!page.IsSyncToS3)
-                //    {
-                //        if (page.CroppedScreenshotByteArray != null)
-                //        {
-                //            try
-                //            {
-                //                string adjustedFilePath = FilePathHelper.CorrectImagePath(page.CroppedScreenshotByteArray);
-                //                // the file path need to be adjusted since the absolute path is saved in the database.
+                await UploadImagesPerPage(allPages);
 
-                //                await AWSHelper.UploadFileAsync("cclee", adjustedFilePath);
-                //                uploadedImageCount++;
-                //                string message = uploadedImageCount + "Image(s) have(s) been uploaded";
-                //                UpdateMessageBox(message);
-                //                //page.IsSyncToS3 = true;
-                //                //DatabaseHelper.Update(page);
-                //            }
-                //            catch (Exception err)
-                //            {
-                //                Debug.Write(err.Message);
-                //            }
-
-                //        }
-                //    }
-                //}
-                //UpdateMessageBox("Done");
+                UpdateMessageBox("Done");
 
 
 
-                var jsonStringForUpdate = JsonConvert.SerializeObject(syncInfo);
-
-
-                using (var client = new HttpClient())
-                {
-                    UpdateMessageBox("Uploading Vocabs ...");
-
-
-                    token = DatabaseHelper.Read<ApplicationConfig>()[0]?.jwtToken;
-
-                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-
-                    var updateContent = new StringContent(jsonStringForUpdate, Encoding.UTF8, "application/json");
-
-                    try
-                    {
-                        var response = await client.PostAsync(postRequestEndPoint, updateContent);
-                        var responseStatus = response.StatusCode.ToString();
-
-
-                        UpdateMessageBox(responseStatus + "!!!");
-                    }
-                    catch (Exception err)
-                    {
-                        Debug.WriteLine(err.Message);
-                        UpdateMessageBox(err.Message);
-                    }
-                }
             }
             catch (Exception err)
             {
@@ -148,7 +96,75 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
             }
         }
 
+        private async Task SyncSqliteDbVocabsToWebDb(List<Note> allNotes, List<Page> allPages, List<Vocab> allVocabs)
+        {
+            var syncInfo = new SyncInfoModel()
+            {
+                Notes = allNotes,
+                Pages = allPages,
+                Vocabs = allVocabs
+            };
+            var jsonStringForUpdate = JsonConvert.SerializeObject(syncInfo);
 
+
+            using (var client = new HttpClient())
+            {
+                UpdateMessageBox("Uploading Vocabs ...");
+
+
+                string token = ApplicationConfig.jwtToken;
+
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + ApplicationConfig.jwtToken);
+
+                var updateContent = new StringContent(jsonStringForUpdate, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(postRequestEndPoint, updateContent);
+                    var responseStatus = response.StatusCode.ToString();
+
+
+                    UpdateMessageBox(responseStatus + "!!!");
+                }
+                catch (Exception err)
+                {
+                    Debug.WriteLine(err.Message);
+                    UpdateMessageBox(err.Message);
+                }
+            }
+        }
+
+        private async Task UploadImagesPerPage(List<Page> allPages)
+        {
+            int uploadedImageCount = 0;
+            foreach (Page page in allPages)
+            {
+
+                if (!page.IsSyncToS3)
+                {
+                    if (page.croppedImageFilePath != null)
+                    {
+                        try
+                        {
+                            string adjustedFilePath = FilePathHelper.CorrectImagePath(page.croppedImageFilePath);
+                            // the file path need to be adjusted since the absolute path is saved in the database.
+
+                            await AWSHelper.UploadFileAsync(ApplicationConfig.username, adjustedFilePath);
+                            uploadedImageCount++;
+                            string message = uploadedImageCount + "Image(s) have(s) been uploaded";
+                            UpdateMessageBox(message);
+                            page.IsSyncToS3 = true;
+                            DatabaseHelper.Update(page);
+                        }
+                        catch (Exception err)
+                        {
+                            Debug.Write(err.Message);
+                        }
+
+                    }
+                }
+            }
+        }
 
         public class MessageBoxEventArgs : EventArgs
         {

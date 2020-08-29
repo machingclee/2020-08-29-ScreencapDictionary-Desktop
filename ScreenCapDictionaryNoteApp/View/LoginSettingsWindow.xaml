@@ -94,7 +94,7 @@
             <StackPanel>
 
                 <Label Content="Username" />
-                <TextBox Margin="5 0 5 5" Padding="5 5" Text="{Binding Username, Mode=TwoWay}"/>
+                <TextBox Margin="5 0 5 5" Padding="5 5" Text="{Binding Username, Mode=TwoWay}" TextChanged="TextBox_TextChanged"/>
                 <Label Content="Password" />
                 <TextBox Margin="5 0 5 5" Padding="5 5" Text="{Binding Password, Mode=TwoWay}"/>
 

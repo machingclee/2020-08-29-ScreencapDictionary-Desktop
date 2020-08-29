@@ -811,7 +811,20 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
 
         public void SyncToWebServer()
         {
-            (new WebServiceHelper()).SyncToWebServer();
+            List<ApplicationConfig> config = DatabaseHelper.Read<ApplicationConfig>();
+
+            var applicationConfig = new ApplicationConfig();
+
+            if (config.Count == 0)
+            {
+                DatabaseHelper.Insert(applicationConfig);
+            }
+            else
+            {
+                applicationConfig = config[0];
+            }
+
+            (new WebServiceHelper(applicationConfig)).SyncToWebServer();
         }
 
     }

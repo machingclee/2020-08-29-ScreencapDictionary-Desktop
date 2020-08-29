@@ -36,7 +36,10 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
         {
             get { return _Username; }
             set
-            { _Username = value; onPropertyChanged("UserName"); }
+            {
+                _Username = value;
+                onPropertyChanged("UserName");
+            }
         }
 
 
@@ -57,21 +60,18 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
             set
             {
                 _JwtToken = value;
-                applicationSetting.jwtToken = value;
+                ApplicationConfig.jwtToken = value;
                 onPropertyChanged("JwtToken");
             }
         }
 
 
-        private ApplicationConfig applicationSetting { get; set; }
+        private ApplicationConfig _ApplicationConfig;
 
-
-        private ApplicationConfig _ApplicationSetting;
-
-        public ApplicationConfig ApplicationSetting
+        public ApplicationConfig ApplicationConfig
         {
-            get { return _ApplicationSetting; }
-            set { _ApplicationSetting = value; }
+            get { return _ApplicationConfig; }
+            set { _ApplicationConfig = value; }
         }
 
 
@@ -84,10 +84,13 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
 
         public LoginSettingsVM()
         {
-            getApplicationConfig();
+            ApplicationConfig = getCurrentApplicationConfig();
+
             SignupCommand = new SignupCommand(this);
 
-            JwtToken = applicationSetting.jwtToken;
+            JwtToken = ApplicationConfig.jwtToken;
+            Username = ApplicationConfig.username;
+            Password = ApplicationConfig.password;
         }
 
 
@@ -135,27 +138,28 @@ namespace ScreenCapDictionaryNoteApp.ViewModel
 
         public void updateApplicationSetting()
         {
-            DatabaseHelper.Update(applicationSetting);
+            ApplicationConfig.username = Username;
+            ApplicationConfig.password = Password;
+            DatabaseHelper.Update(ApplicationConfig);
         }
 
 
 
-        private void getApplicationConfig()
+        private ApplicationConfig getCurrentApplicationConfig()
         {
             List<ApplicationConfig> config = DatabaseHelper.Read<ApplicationConfig>();
-
+            var currentConfig = new ApplicationConfig();
 
             if (config.Count == 0)
             {
-
-                applicationSetting = new ApplicationConfig();
-                DatabaseHelper.Insert(applicationSetting);
+                DatabaseHelper.Insert(currentConfig);
             }
             else
             {
-                applicationSetting = config[0];
-
+                currentConfig = config[0];
             }
+
+            return currentConfig;
         }
 
 

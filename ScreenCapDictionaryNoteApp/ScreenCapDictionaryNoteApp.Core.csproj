@@ -11,6 +11,8 @@
     <AssemblyName>ScreenCapDictionaryNoteApp</AssemblyName>
     <ApplicationIcon>toggle_log.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64</Platforms>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>screencap.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="notebook_78464.ico" />
@@ -74,6 +76,9 @@
 
 
   <ItemGroup>
+    <None Update="environment_variable.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="recaptcha.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -10,7 +10,7 @@ namespace ScreenCapDictionaryNoteApp.Model
 
         public static string AWSAccessKeyId = "AKIAIMWSLRDFCTZV2PSQ";
 
-        public static string SERVICE_HOST = "http://localhost:8080";
-
+        //public static string SERVICE_HOST = "http://localhost:8080";
+        public static string SERVICE_HOST = "https://dictionary.machingclee.com";
     }
 }

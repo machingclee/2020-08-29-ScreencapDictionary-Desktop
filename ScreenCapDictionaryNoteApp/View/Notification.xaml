@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScreenCapDictionaryNoteApp.View"
         mc:Ignorable="d"
-        Title="Window1" Width="300"
+        Title="Window1" Height="250" Width="300"
         >
 
 
@@ -84,14 +84,14 @@
 
 
 
-    <Grid Height="150">
+    <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="7*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalAlignment="Stretch" Margin="15 5 15 0" Grid.Row="0">
-            <TextBlock VerticalAlignment="Stretch" x:Name="MessageTextBlock" TextWrapping="Wrap"/>
+        <ScrollViewer VerticalAlignment="Stretch" Margin="15 5 0 0" Grid.Row="0">
+            <TextBlock VerticalAlignment="Stretch" x:Name="MessageTextBlock" Margin="0 0 15 0"  TextWrapping="Wrap" Height="160" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" />
         </ScrollViewer>
         <Button Content="ok" Width="70" Click="OkButton_Clicked" x:Name="OkButton" Grid.Row="1" Height="20"/>
     </Grid>
