@@ -15,10 +15,14 @@
     <AssemblyOriginatorKeyFile>screencap.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Resource Include="notebook_78464.ico" />
+    <Resource Include="notebook_78464.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="toggle_log.ico" />
+    <Resource Include="toggle_log.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\addButton.png" />

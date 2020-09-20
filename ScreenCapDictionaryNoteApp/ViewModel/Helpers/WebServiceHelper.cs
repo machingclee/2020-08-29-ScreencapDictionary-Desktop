@@ -55,27 +55,7 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
                 List<Page> allPages = DatabaseHelper.Read<Page>();
                 List<Vocab> allVocabs = DatabaseHelper.Read<Vocab>();
 
-                // just sync pages with cropped image:
-                foreach (var page in allPages.ToList())
-                {
-                    if (page.croppedImageFilePath == null)
-                    {
-                        var list = allVocabs.RemoveAll(vocab => vocab.PageId == page.Id);
-                        allPages.Remove(page);
-                    }
-                }
-                // ------------------- add necessary update  ------------------- 
-
-
-                allPages.ForEach(page =>
-                {
-                    String croppedImageFilePath = page.croppedImageFilePath;
-                    Regex pattern = new Regex(@"(?<=Screenshot\\).*\.png$");
-                    Match match = pattern.Match(croppedImageFilePath);
-
-                    page.croppedImageFilePath = match.Groups[0].Value;
-
-                });
+                allPages = FilerPages(allPages, allVocabs);
 
                 await SyncSqliteDbVocabsToWebDb(allNotes, allPages, allVocabs);
 
@@ -94,6 +74,32 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
             {
 
             }
+        }
+
+        private List<Page> FilerPages(List<Page> _allPages, List<Vocab> _allVocabs)
+        {
+            // just sync pages with cropped image:
+            foreach (var page in _allPages.ToList())
+            {
+                if (page.croppedImageFilePath == null || page.croppedImageFilePath == "")
+                {
+                    var list = _allVocabs.RemoveAll(vocab => vocab.PageId == page.Id);
+                    _allPages.Remove(page);
+                }
+            }
+            // ------------------- add necessary update  ------------------- 
+
+            _allPages.ForEach(page =>
+            {
+                String croppedImageFilePath = page.croppedImageFilePath;
+                Regex pattern = new Regex(@"(?<=Screenshot\\).*\.png$");
+                Match match = pattern.Match(croppedImageFilePath);
+
+                page.croppedImageFilePath = match.Groups[0].Value;
+
+            });
+
+            return _allPages;
         }
 
         private async Task SyncSqliteDbVocabsToWebDb(List<Note> allNotes, List<Page> allPages, List<Vocab> allVocabs)
@@ -148,7 +154,7 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Helpers
                         {
                             string adjustedFilePath = FilePathHelper.CorrectImagePath(page.croppedImageFilePath);
                             // the file path need to be adjusted since the absolute path is saved in the database.
-
+                            page.croppedImageFilePath = adjustedFilePath;
                             await AWSHelper.UploadFileAsync(ApplicationConfig.username, adjustedFilePath);
                             uploadedImageCount++;
                             string message = uploadedImageCount + "Image(s) have(s) been uploaded";

@@ -29,7 +29,7 @@ namespace ScreenCapDictionaryNoteApp.ViewModel.Convertor
                 }
                 else
                 {
-                    if (selectedPage.croppedImageFilePath != null)
+                    if (selectedPage.croppedImageFilePath != null && selectedPage.croppedImageFilePath != "")
                     {
                         return BitmapHelper.BitmapImageFromPath(selectedPage.croppedImageFilePath);
                     }
